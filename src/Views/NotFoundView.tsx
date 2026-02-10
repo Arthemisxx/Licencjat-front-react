@@ -1,0 +1,5 @@
+export const NotFoundView = () => {
+    return (
+        <></>
+    );
+};

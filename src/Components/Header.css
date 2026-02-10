@@ -1,0 +1,47 @@
+.header-wrapper{
+    height: min(75px);
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.header-wrapper-main{
+    width: 100%;
+    height: calc(100% - 4px);
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-wrapper-line{
+    height: 4px;
+    width: 100%;
+    background-color: #d4213d;
+}
+
+.header-options{
+    display: flex;
+    padding-right: 50px;
+
+}
+
+.header-option{
+    color: black;
+    align-self: center;
+    font-size: 18px;
+    font-weight: 600;
+    padding-left: 50px;
+
+}
+
+.header-logo{
+    display: flex;
+    padding-left: 50px;
+}
+
+.header-logo p{
+    color: black;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    align-self: center;
+}

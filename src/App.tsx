@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {Header} from "./Components/Header.tsx";
+import {HomeView} from "./Views/HomeView.tsx";
+import {MapView} from "./Views/MapView.tsx";
+import {AddReportView} from "./Views/AddReportView.tsx";
+import {UserAccountView} from "./Views/UserAccountView.tsx";
+import {Footer} from "./Components/Footer.tsx";
+import {NotFoundView} from "./Views/NotFoundView.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <>
+                <BrowserRouter>
+                    <Header/>
+                    <Routes>
+                        <Route path="/" element={<><HomeView/><Footer/></>}/>
+                        <Route path="/mapa" element={<MapView/>}/>
+                        <Route path="/nowe-zgloszenie" element={<AddReportView/>}/>
+                        <Route path="/uzytkownik" element={<UserAccountView/>}/>
+                        <Route path="*" element={<NotFoundView/>}/>
+
+                    </Routes>
+                </BrowserRouter>
+        </>
+    )
 }
 
 export default App

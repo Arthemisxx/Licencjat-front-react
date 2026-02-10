@@ -1,0 +1,57 @@
+.btn{
+    width: fit-content;
+}
+.button-wrapper{
+    display: flex;
+    width: 200px;
+    height: 60px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border-radius: 8px;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+
+.report{
+    background-color: #d4213d;
+    color: white;
+    border: none;
+}
+
+.report:hover{
+    background-color: #a20f27;
+    transition: background-color, 0.25s;
+}
+
+.log-in{
+    background-color: white;
+    color: #0067b4;
+    border: 3px solid #0067b4;
+}
+
+.log-in:hover{
+    background-color: #0067b4;
+    color: white;
+    transition: color, background-color, 0.25s;
+}
+
+.map{
+    border-radius: 50px;
+    color: #0067b4;
+    font-size: 22px;
+    width: 440px;
+    height: 75px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border: none;
+}
+
+.map:hover{
+    border: none;
+    background-color: #0067b4;
+    color: white;
+    transition: background-color,color, 0.25s;
+}

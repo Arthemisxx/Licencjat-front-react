@@ -1,0 +1,51 @@
+.wrapper h1 {
+    padding: 0;
+    margin: 0;
+}
+
+.buttons-wrapper {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 60px;
+}
+
+.home-p {
+    padding-top: 10px;
+    font-size: 18px;
+}
+
+.home-h1 {
+    font-size: 54px;
+}
+
+.map-wrapper{
+    position: relative;
+    width: 80%;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    cursor: pointer;
+}
+
+.map-img {
+    position: absolute;
+    background-image: url('../assets/lodz.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    transition: filter 0.3s ease;
+    border-radius: 12px;
+}
+
+.map-wrapper:hover .map-img{
+
+    filter: blur(3px);
+    transition: filter 0.3s ease;
+}
