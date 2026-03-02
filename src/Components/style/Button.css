@@ -17,31 +17,31 @@
 
 
 .report{
-    background-color: #d4213d;
+    background-color: var(--color-primary);
     color: white;
     border: none;
 }
 
 .report:hover{
-    background-color: #a20f27;
+    background-color: var(--color-primary-hover);
     transition: background-color, 0.25s;
 }
 
 .log-in{
     background-color: white;
-    color: #0067b4;
-    border: 3px solid #0067b4;
+    color: var(--color-secondary);
+    border: 3px solid var(--color-secondary);
 }
 
 .log-in:hover{
-    background-color: #0067b4;
+    background-color: var(--color-secondary);
     color: white;
     transition: color, background-color, 0.25s;
 }
 
 .map{
     border-radius: 50px;
-    color: #0067b4;
+    color: var(--color-secondary);
     font-size: 22px;
     width: 440px;
     height: 75px;
@@ -51,7 +51,22 @@
 
 .map:hover{
     border: none;
-    background-color: #0067b4;
+    background-color: var(--color-secondary);
     color: white;
     transition: background-color,color, 0.25s;
+}
+
+@media (max-width: 768px) {
+    .map{
+        width: 50vw;
+        /*padding-left: 20px;*/
+        /*padding-right: 20px;*/
+        padding: 10px 20px;
+        height: fit-content;
+        border-radius: 20px;
+    }
+
+    .map p {
+        font-size: 18px;
+    }
 }

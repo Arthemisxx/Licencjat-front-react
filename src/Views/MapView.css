@@ -1,18 +1,10 @@
-.wrapper{
+.mapview-wrapper{
     min-height: calc(100vh - 225px);
+    height: 100%;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0 30px;
     overflow: hidden;
-}
-
-
-@media (max-width: 768px) {
-    .wrapper{
-        width: 100%;
-        height: auto;
-
-    }
 }

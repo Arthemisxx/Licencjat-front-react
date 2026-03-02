@@ -1,4 +1,5 @@
 import './App.css'
+import './variables.css'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Header} from "./Components/Header.tsx";
 import {HomeView} from "./Views/HomeView.tsx";
