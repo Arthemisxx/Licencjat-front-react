@@ -1,5 +1,5 @@
 .header-wrapper{
-    min-height: 75px;
+    height: 75px;
     /*height: 8%;*/
     width: 100%;
     display: flex;
@@ -18,7 +18,7 @@
 .header-wrapper-line{
     height: 4px;
     width: 100%;
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-magenta);
 }
 
 .header-options{
@@ -28,7 +28,7 @@
 }
 
 .header-option{
-    color: var(--color-text-main);
+    color: var(--color-text-main-black);
     align-self: center;
     font-size: 18px;
     font-weight: 600;
@@ -43,7 +43,7 @@
 }
 
 .header-logo h1{
-    color: var(--color-text-main);
+    color: var(--color-text-main-black);
     font-size: 28px;
     font-weight: 700;
     margin: 0;

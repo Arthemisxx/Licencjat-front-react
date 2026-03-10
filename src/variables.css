@@ -1,7 +1,13 @@
 :root {
-    --color-primary: #d4213d;
-    --color-primary-hover: #a20f27;
-    --color-secondary: #0067b4;
+    --color-background-white: #ffffff;
+    --color-primary-magenta: #ea008c;
+    --color-primary-magenta-hover: #b90272;
+    --color-secondary-blue: #00adee;
+    --color-secondary-blue-hover: #0282ad;
+    --color-secondary-yellow: #fde201;
+    --color-accent-gray: #eeeeee;
 
-    --color-text-main: #000;
+    --color-error: #e10000;
+
+    --color-text-main-black: #000;
 }

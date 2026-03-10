@@ -1,6 +1,6 @@
 import {Button} from "../Components/Button.tsx";
-import "./HomeView.css"
-import "./views.css"
+import "./style/HomeView.css"
+import "./style/views.css"
 
 export const HomeView = () => {
     return (
@@ -9,7 +9,7 @@ export const HomeView = () => {
             <h1 className="home-h1 color-h1">Każdego dnia</h1>
             <p className="home-p">Widzisz uszkodzoną nawierzchnię? Niedziałającą latarnię? Przepełniony kosz? <br/> Nie
                 przechodź
-                obojętnie.<br/> Zgłoś awarię w 30 sekund.</p>
+                obojętnie<br/> Zgłoś awarię</p>
             <div className="buttons-wrapper">
                 <Button buttonType="report" content="ZGŁOŚ PROBLEM" route="/nowe-zgloszenie"/>
                 <Button buttonType="log-in" content="ZALOGUJ SIĘ" route="/uzytkownik"/>

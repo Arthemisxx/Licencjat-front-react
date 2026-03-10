@@ -11,6 +11,7 @@
 .home-p {
     padding-top: 30px;
     font-size: 18px;
+    text-align: center;
 }
 
 .home-h1 {
@@ -24,7 +25,7 @@
 }
 
 .color-h1{
-    color: var(--color-primary);
+    color: var(--color-primary-magenta);
 }
 
 .map-wrapper{
@@ -40,7 +41,7 @@
 
 .map-img {
     position: absolute;
-    background-image: url('../assets/lodz.jpg');
+    background-image: url('../../assets/lodz.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
