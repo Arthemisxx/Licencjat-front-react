@@ -6,13 +6,28 @@ import {Button} from "../Components/Button.tsx";
 import {useEffect, useState} from "react";
 import {type LatLngBoundsExpression} from "leaflet";
 import cityBoundaries from "../Utils/lodz-borders.json"
-import type {ReportMapData} from "../types/report.ts";
-import {fetchFilteredReports} from "../Utils/api.ts";
+import type {Category, ReportMapData} from "../types/report.ts";
+import {fetchCategories, fetchFilteredReports} from "../Utils/api.ts";
+import {useSearchParams} from "react-router-dom";
 
 export const MapView = () => {
     const lodzBounds: LatLngBoundsExpression = [[51.6500, 19.2500], [51.9000, 19.6500]];
-    const [filteredCategoryIds, setFilteredCategoryIds] = useState([1, 2, 3, 4, 5]);
+    const [categories, setCategories] = useState<Category[]>();
     const [filteredReports, setFilteredReports] = useState<ReportMapData[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const categoriesParam = searchParams.get("categories");
+    const hasCategoriesParam = searchParams.has("categories");
+
+    let filteredCategoryIds: number[];
+
+    if (!hasCategoriesParam) {
+        filteredCategoryIds = [1, 2, 3, 4, 5];
+    } else if (categoriesParam === "") {
+        filteredCategoryIds = [];
+    } else {
+        filteredCategoryIds = categoriesParam!.split(',').map(Number);
+    }
 
     const borderStyle = {
         color: "var(--color-primary-magenta)",
@@ -26,12 +41,35 @@ export const MapView = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            const categories = await fetchCategories();
+            setCategories(categories);
+
             const reports = await fetchFilteredReports(filteredCategoryIds);
             setFilteredReports(reports);
         }
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const reports = await fetchFilteredReports(filteredCategoryIds);
+            setFilteredReports(reports);
+        }
+        fetchData();
+    }, [searchParams]);
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, categoryId: number) => {
+        let newIds: number[];
+
+        if (e.target.checked) {
+            newIds = [...filteredCategoryIds, categoryId];
+        } else {
+            newIds = filteredCategoryIds.filter(id => id !== categoryId);
+        }
+
+        setSearchParams({categories: newIds.join(',')});
+    }
 
     return (
         <div className="mapview-wrapper">
@@ -39,12 +77,14 @@ export const MapView = () => {
 
                 <div className="map-filter-wrapper">
                     <p>Filtruj widok zgłoszeń</p>
-                    {/*TODO dodać pobieranie kategorii z backendu*/}
-                    <label><input type="checkbox" checked/> Oświetlenie </label><br/>
-                    <label><input type="checkbox" checked/> Chodniki </label><br/>
-                    <label><input type="checkbox" checked/> Jezdnia </label><br/>
-                    <label><input type="checkbox" checked/> Mała architektura </label><br/>
-                    <label><input type="checkbox" checked/> Inne </label><br/>
+                    {categories?.map(category => (
+                        <label key={category.id}><input type="checkbox"
+                                                        checked={filteredCategoryIds.includes(category.id)}
+                                                        onChange={(e) => handleChange(e, category.id)}/>
+                            {category.name}
+                            <br/></label>
+                    ))}
+
                 </div>
 
 

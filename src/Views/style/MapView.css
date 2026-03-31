@@ -26,6 +26,14 @@
 
 }
 
+.map-filter-wrapper label{
+    padding-bottom: 15px;
+}
+
+.map-filter-wrapper label input{
+    margin-right: 5px;
+}
+
 .map-filter-wrapper p{
     padding-bottom: 15px;
     font-weight: bold;
