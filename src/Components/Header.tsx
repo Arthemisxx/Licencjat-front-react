@@ -1,14 +1,22 @@
 import {Link} from "react-router-dom";
-import "./Header.css";
+import "./style/Header.css";
+import {useAuth} from "../Auth/AuthProvider.tsx";
 
 export const Header = () => {
+    const {isAuthenticated} = useAuth();
+
     return (
         <div className="header-wrapper">
             <div className="header-wrapper-main">
                 <Link to={"/"} className="header-logo"><h1>ŁÓDŹ</h1> <h1>&nbsp;NAPRAWIA</h1></Link>
                 <div className="header-options">
                     <Link to={"/mapa"} className="header-option">Mapa zgłoszeń</Link>
-                    <Link to={"/uzytkownik"} className="header-option">Zaloguj się</Link>
+                    {isAuthenticated ? (
+                            <Link to={"/uzytkownik"} className="header-option">Konto użytkownika</Link>)
+                        : (
+                            <Link to={"/logowanie"} className="header-option">Zaloguj się</Link>
+                        )}
+
                 </div>
 
             </div>

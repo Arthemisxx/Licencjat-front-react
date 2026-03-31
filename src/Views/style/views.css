@@ -1,11 +1,12 @@
 .wrapper{
-    min-height: calc(100vh - 225px);
+    min-height: calc(100vh - 175px);
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0 30px;
     overflow: hidden;
+    background-color: var(--color-background-white);
 }
 
 

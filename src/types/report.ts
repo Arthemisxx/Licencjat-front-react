@@ -1,6 +1,5 @@
 export interface ReportData{
     categoryId: number;
-    title: string;
     description: string;
     latitude: number;
     longitude: number;
@@ -9,11 +8,20 @@ export interface ReportData{
     photos?: File[];
     }
 
-export interface PartialReport{
-    title: string
-    description: string;
+
+export interface Category{
+    id: number;
+    name: string;
+    iconKey: string;
+    colorHex: string;
+}
+
+export interface ReportMapData{
+    id: number;
+    categoryId: number;
+    categoryName: string;
+    categoryIconKey: string;
+    categoryColorHex: string;
     latitude: number;
     longitude: number;
-    address: string;
-    photos?: File[];
 }

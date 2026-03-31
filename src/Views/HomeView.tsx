@@ -1,8 +1,16 @@
 import {Button} from "../Components/Button.tsx";
 import "./style/HomeView.css"
 import "./style/views.css"
+import {useAuth} from "../Auth/AuthProvider.tsx";
+import {useEffect} from "react";
 
 export const HomeView = () => {
+    const {isAuthenticated} = useAuth();
+
+    useEffect(() => {
+        localStorage.setItem("previousView", "/");
+    }, []);
+
     return (
         <div className="wrapper">
             <h1 className="home-h1 padding-h1">Zmieniajmy Łódź</h1>
@@ -12,7 +20,11 @@ export const HomeView = () => {
                 obojętnie<br/> Zgłoś awarię</p>
             <div className="buttons-wrapper">
                 <Button buttonType="report" content="ZGŁOŚ PROBLEM" route="/nowe-zgloszenie"/>
-                <Button buttonType="log-in" content="ZALOGUJ SIĘ" route="/uzytkownik"/>
+                {isAuthenticated ? (
+                    <Button buttonType="log-in" content="TWOJE KONTO" route="/uzytkownik"/>
+                ) : (
+                    <Button buttonType="log-in" content="ZALOGUJ SIĘ" route="/logowanie"/>
+                )}
             </div>
             <div className="map-wrapper">
                 <div className="map-img"></div>
