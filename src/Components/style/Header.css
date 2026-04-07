@@ -28,6 +28,11 @@
 
 }
 
+.admin {
+    background-color: var(--color-primary-magenta);
+    border-radius: 12px;
+}
+
 .header-option{
     color: var(--color-text-main-black);
     align-self: center;

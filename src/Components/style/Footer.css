@@ -1,7 +1,7 @@
 .footer-wrapper{
     height: min(100px);
     width: 100vw;
-    background-color: black;
+    background-color: var(--color-accent2-gray);
     color: white;
     /*padding: 50px;*/
     display: flex;
@@ -13,6 +13,7 @@
     margin: 0;
     height: 100%;
     align-content: center;
+    color: var(--color-text-main-black);
 
 }
 

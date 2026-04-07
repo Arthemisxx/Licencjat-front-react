@@ -14,14 +14,13 @@ export const fetchAddressFromCoords = async (lat: number, lng: number): Promise<
 
         const data = await response.json();
         const address = data.address;
-
         if (!address) return null;
 
         const city = address.city || address.town || address.village || address.hamlet || address.municipality || "";
-
-        const street = address.road || "";
-
-        const name = city ? (street ? `${street}, ${city}` : city) : street;
+        const road = address.road || "";
+        const houseNumber = address.house_number || "";
+        const streetWithNumber = houseNumber ? `${road} ${houseNumber}`.trim() : road;
+        const name = city ? (streetWithNumber ? `${streetWithNumber}, ${city}` : city) : streetWithNumber;
 
         return (name || "Nieznana lokalizacja");
 

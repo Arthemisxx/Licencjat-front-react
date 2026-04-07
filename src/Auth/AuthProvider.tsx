@@ -1,12 +1,16 @@
 import {createContext, useState, type ReactNode, useContext, useEffect} from "react";
 import {jwtDecode} from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import type {AuthenticatedUserDetails} from "../types/User.ts";
+import {fetchUserDetails} from "../Utils/api.ts";
 
 interface AuthContextType {
     token: string | null;
+    user: AuthenticatedUserDetails | null;
     login: (token: string) => void;
     isAuthenticated: boolean;
     logout: () => void;
+    updateCurrentUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -14,6 +18,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({children}: { children: ReactNode }) => {
     const navigate = useNavigate();
     const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+    const [user, setUser] = useState<AuthenticatedUserDetails | null>(null);
 
     const login = (newToken: string) => {
         localStorage.setItem("token", newToken);
@@ -26,6 +31,10 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         navigate("/");
     };
 
+    const updateCurrentUser = () => {
+        fetchUserDetails().then(data => setUser(data));
+    };
+
     useEffect(() => {
         if (token) {
             try {
@@ -36,6 +45,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                 if (expirationTime < currentTime) {
                     logout();
                 } else {
+                    fetchUserDetails().then(data => setUser(data));
                     const remainingTime = expirationTime - currentTime;
                     const timer = setTimeout(() => {
                         alert("Wylogowano");
@@ -52,7 +62,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     const isAuthenticated = !!token;
 
     return (
-        <AuthContext.Provider value={{token, login, logout, isAuthenticated}}>
+        <AuthContext.Provider value={{token, login, logout, isAuthenticated, user, updateCurrentUser}}>
             {children}
         </AuthContext.Provider>
     );

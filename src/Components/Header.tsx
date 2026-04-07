@@ -3,7 +3,7 @@ import "./style/Header.css";
 import {useAuth} from "../Auth/AuthProvider.tsx";
 
 export const Header = () => {
-    const {isAuthenticated} = useAuth();
+    const {isAuthenticated, user} = useAuth();
 
     return (
         <div className="header-wrapper">
@@ -16,6 +16,10 @@ export const Header = () => {
                         : (
                             <Link to={"/logowanie"} className="header-option">Zaloguj się</Link>
                         )}
+
+                    {user?.role === "ADMIN" && (
+                        <Link to={"/panel-administratora"} className="header-option admin">Panel administratora</Link>
+                    )}
 
                 </div>
 

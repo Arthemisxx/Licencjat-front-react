@@ -3,18 +3,23 @@ import "./style/MapView.css"
 import "./style/views.css"
 import 'leaflet/dist/leaflet.css';
 import {Button} from "../Components/Button.tsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {type LatLngBoundsExpression} from "leaflet";
 import cityBoundaries from "../Utils/lodz-borders.json"
 import type {Category, ReportMapData} from "../types/report.ts";
 import {fetchCategories, fetchFilteredReports} from "../Utils/api.ts";
-import {useSearchParams} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import {ReportDetailsPanel} from "../Components/ReportDetailsPanel.tsx";
 
 export const MapView = () => {
-    const lodzBounds: LatLngBoundsExpression = [[51.6500, 19.2500], [51.9000, 19.6500]];
+    const lodzBounds: LatLngBoundsExpression = [[51.6500, 19.2500], [51.9000, 19.7000]];
     const [categories, setCategories] = useState<Category[]>();
     const [filteredReports, setFilteredReports] = useState<ReportMapData[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
+    const [potentialReport, setPotentialReport] = useState<{lat: number, lng: number} | null>(null)
+    const navigate = useNavigate();
+    const tempMarkerRef = useRef<any>(null);
 
     const categoriesParam = searchParams.get("categories");
     const hasCategoriesParam = searchParams.has("categories");
@@ -32,7 +37,8 @@ export const MapView = () => {
     const borderStyle = {
         color: "var(--color-primary-magenta)",
         weight: 3,
-        fillOpacity: 0
+        fillColor: "transparent",
+        fillOpacity: 0.01
     };
 
     useEffect(() => {
@@ -58,6 +64,14 @@ export const MapView = () => {
         fetchData();
     }, [searchParams]);
 
+    useEffect(() => {
+        if(potentialReport && tempMarkerRef.current){
+            setTimeout(() => {
+                tempMarkerRef.current?.openPopup()
+            }, 10);
+        }
+    }, [potentialReport]);
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>, categoryId: number) => {
         let newIds: number[];
@@ -70,6 +84,7 @@ export const MapView = () => {
 
         setSearchParams({categories: newIds.join(',')});
     }
+
 
     return (
         <div className="mapview-wrapper">
@@ -93,25 +108,68 @@ export const MapView = () => {
                 <Button buttonType="add-report" content={"Dodaj zgłoszenie"} route="/nowe-zgloszenie"></Button>
 
             </div>
-            <MapContainer center={[51.77307, 19.48040]} zoom={12} scrollWheelZoom={true}
-                          style={{height: '100%', width: '100%'}} maxBounds={lodzBounds} minZoom={11}>
+            <MapContainer center={[51.77307, 19.48040]}
+                          zoom={11}
+                          scrollWheelZoom={true}
+                          style={{height: '100%', width: '100%'}}
+                          maxBounds={lodzBounds}
+                          minZoom={11}
+            >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 {cityBoundaries && (
-                    <GeoJSON data={cityBoundaries as any} style={borderStyle}/>
+                    <GeoJSON
+                        data={cityBoundaries as any}
+                        style={borderStyle}
+                        eventHandlers={{
+                            click: (e) => {
+                                setPotentialReport(e.latlng);
+                                setSelectedReportId(null);
+                            }
+                        }}
+                    />
                 )}
                 {filteredReports.map(report => (
                     <Marker
                         key={report.id}
-                        position={[report.latitude, report.longitude]}>
-                        <Popup>
-                            {report.categoryName}
-                        </Popup>
+                        position={[report.latitude, report.longitude]}
+                        eventHandlers={{
+                            click: () => {
+                                setSelectedReportId(report.id);
+                                setPotentialReport(null);
+                            },
+                        }}
+                    >
                     </Marker>
                 ))}
+                {potentialReport && (
+                    <Marker position={potentialReport}
+                            ref={tempMarkerRef}>
+                        <Popup eventHandlers={{
+                            remove: () => {
+                                setPotentialReport(null);
+                            },
+
+                        }}>
+                            <div className="popup-add-report">
+                                <p>Chcesz dodać zgłoszenie w tym miejscu?</p>
+                                <button className="popup-report-btn" onClick={() => navigate(`/nowe-zgloszenie?lat=${potentialReport?.lat}&lng=${potentialReport.lng}`)}>
+                                    DODAJ
+                                </button>
+                            </div>
+                        </Popup>
+                    </Marker>
+                )}
             </MapContainer>
+
+            {selectedReportId && (
+                <ReportDetailsPanel
+                    reportId={selectedReportId}
+                    onClose={() => setSelectedReportId(null)}
+                ></ReportDetailsPanel>
+            )}
 
         </div>
     );

@@ -3,7 +3,7 @@ import {AddReportFirstStep} from "./AddReportFirstStep.tsx";
 import {useEffect, useState} from "react";
 import type {Category, ReportData} from "../../types/report.ts";
 import {AddReportSecondStep} from "./AddReportSecondStep.tsx";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
 const AVAILABLE_CATEGORIES: Category[] = [
     {id: 1, name: "Oświetlenie", iconKey: "lamp.svg", colorHex: "#FFCB05"},
@@ -26,8 +26,17 @@ export const AddReportView = () => {
         return savedCategory ? parseInt(savedCategory) : -1;
     });
 
+    const [searchParams] = useSearchParams();
+    const hasInitialLocalization = searchParams.has("lat") && searchParams.has("lng");
+
     useEffect(() => {
-        sessionStorage.setItem("reportStep", step.toString())
+        if(hasInitialLocalization){
+            setStep(1);
+        }
+    }, [hasInitialLocalization]);
+
+    useEffect(() => {
+            sessionStorage.setItem("reportStep", step.toString())
     }, [step]);
 
     useEffect(() => {
@@ -41,7 +50,10 @@ export const AddReportView = () => {
     }
 
     const handleSecondStep = async (report: ReportData) => {
+
+
         const finalReportData = {
+            authorId: report.authorId,
             categoryId: categoryId,
             description: report.description,
             latitude: report.latitude,
@@ -59,6 +71,10 @@ export const AddReportView = () => {
             })
 
         }
+
+        const log = await new Response(formData.get("reportData")).text() ;
+        console.log(log);
+
         try {
             const response = await fetch("http://localhost:8080/reports", {
                 method: "POST",
@@ -70,7 +86,7 @@ export const AddReportView = () => {
                 sessionStorage.removeItem("category");
 
                 alert("Wysłano zgłoszenie");
-                navigate("/");
+                navigate("/mapa");
 
             }
         } catch (e) {

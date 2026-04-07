@@ -43,6 +43,18 @@
     border-radius: 20px;
 }
 
+.new{
+    background-color: var(--color-secondary-blue);
+}
+
+.in-progress{
+    background-color: var(--color-primary-magenta);
+}
+
+.resolved{
+    background-color: var(--color-secondary-yellow);
+}
+
 .report-status p {
     margin: 0;
 }

@@ -28,11 +28,40 @@
 
 .map-filter-wrapper label{
     padding-bottom: 15px;
+    display: flex;
+    color: var(--color-text-main-black);
+
 }
 
-.map-filter-wrapper label input{
-    margin-right: 5px;
+.map-filter-wrapper p{
+
+    color: var(--color-text-main-black);
+
 }
+
+.map-filter-wrapper label input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--color-secondary-blue);
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+    background-color: var(--color-background-white);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.map-filter-wrapper label input:checked {
+    background-color: var(--color-secondary-blue);
+    border-color: var(--color-secondary-blue);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
 
 .map-filter-wrapper p{
     padding-bottom: 15px;
@@ -52,5 +81,28 @@
     border-radius: 20px;
     border-left: var(--color-secondary-blue) 5px solid;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.popup-report-btn{
+    background-color: var(--color-primary-magenta);
+    color: var(--color-background-white);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.popup-add-report{
+    text-align: center;
+    padding: 5px;
+}
+
+.popup-add-report p{
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 18px;
 
 }
