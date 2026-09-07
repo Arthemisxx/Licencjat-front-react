@@ -34,12 +34,13 @@
 }
 
 .map-filter-wrapper p{
-
+    font-family: Poppins, sans-serif;
     color: var(--color-text-main-black);
 
 }
 
 .map-filter-wrapper label input {
+    font-family: Poppins, sans-serif;
     appearance: none;
     -webkit-appearance: none;
     width: 20px;

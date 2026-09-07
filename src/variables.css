@@ -5,11 +5,10 @@
     --color-secondary-blue: #00adee;
     --color-secondary-blue-hover: #0282ad;
     --color-secondary-yellow: #fde201;
+    --color-secondary-yellow-hover: #d5bf01;
     --color-accent-gray: #ececec;
     --color-accent2-gray: #dadada;
-
     --color-error: #e10000;
-
     --color-text-main-black: #000;
     --color-text-gray: #666;
 }
@@ -21,6 +20,7 @@
     --color-secondary-blue: #00adee;
     --color-secondary-blue-hover: #02698f;
     --color-secondary-yellow: #fde201;
+    --color-secondary-yellow-hover: #d5bf01;
     --color-accent-gray: #242424;
     --color-accent2-gray: #000000;
     --color-error: #ff4d4d;

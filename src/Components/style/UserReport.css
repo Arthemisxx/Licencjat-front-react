@@ -55,6 +55,11 @@
     background-color: var(--color-secondary-yellow);
 }
 
+.rejected{
+    background-color: var(--color-error);
+}
+
+
 .report-status p {
     margin: 0;
 }

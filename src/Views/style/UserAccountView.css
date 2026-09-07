@@ -348,6 +348,10 @@
     background-color: var(--color-secondary-yellow);
 }
 
+.rejected{
+    background-color: var(--color-error);
+}
+
 
 .report-description {
     font-size: 18px;

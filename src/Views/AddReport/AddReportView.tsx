@@ -4,17 +4,11 @@ import {useEffect, useState} from "react";
 import type {Category, ReportData} from "../../types/report.ts";
 import {AddReportSecondStep} from "./AddReportSecondStep.tsx";
 import {useNavigate, useSearchParams} from "react-router-dom";
-
-const AVAILABLE_CATEGORIES: Category[] = [
-    {id: 1, name: "Oświetlenie", iconKey: "lamp.svg", colorHex: "#FFCB05"},
-    {id: 2, name: "Chodniki", iconKey: "road.svg", colorHex: "#D71920"},
-    {id: 3, name: "Jezdnia", iconKey: "road.svg", colorHex: "#D71920"},
-    {id: 4, name: "Mała architektura", iconKey: "tree.svg", colorHex: "#10B981"},
-    {id: 5, name: "Inne", iconKey: "other.svg", colorHex: "#6B7280"}
-];
+import {fetchCategories} from "../../Utils/api.ts";
 
 export const AddReportView = () => {
     const navigate = useNavigate();
+    const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
 
     const [step, setStep] = useState<1 | 2>(() => {
         const savedStep = sessionStorage.getItem("reportStep");
@@ -29,8 +23,25 @@ export const AddReportView = () => {
     const [searchParams] = useSearchParams();
     const hasInitialLocalization = searchParams.has("lat") && searchParams.has("lng");
 
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    const showToast = (message: string) => {
+        setToastMessage(message);
+        setTimeout(() => {
+            setToastMessage(null);
+        }, 3000);
+    };
+
+    useEffect(() => {
+        const getCategories = async () => {
+            setAvailableCategories(await fetchCategories());
+        }
+        getCategories();
+    }, []);
+
     useEffect(() => {
         if(hasInitialLocalization){
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setStep(1);
         }
     }, [hasInitialLocalization]);
@@ -85,19 +96,21 @@ export const AddReportView = () => {
                 sessionStorage.removeItem("reportStep");
                 sessionStorage.removeItem("category");
 
-                alert("Wysłano zgłoszenie");
-                navigate("/mapa");
+                showToast("Wysłano zgłoszenie!");
+                setTimeout(() => {
+                    navigate("/mapa");
+                }, 2000);
 
             }
         } catch (e) {
-            alert("Błąd wysyłania zgłoszenia")
+            showToast("Błąd wysyłania zgłoszenia");
         }
     }
 
     return (
         <div className="report-wrapper">
             {step === 1 && (
-                <AddReportFirstStep categories={AVAILABLE_CATEGORIES}
+                <AddReportFirstStep categories={availableCategories}
                                     onCategorySelect={handleFirstStep}></AddReportFirstStep>
             )}
 
@@ -106,9 +119,15 @@ export const AddReportView = () => {
                 <>
                     <AddReportSecondStep onStepBack={() => setStep(1)}
                                          onSubmit={handleSecondStep}
-                                         categories={AVAILABLE_CATEGORIES}
+                                         categories={availableCategories}
                                          initialCategoryId={categoryId}></AddReportSecondStep>
                 </>
+            )}
+
+            {toastMessage && (
+                <div className="custom-toast">
+                    {toastMessage}
+                </div>
             )}
 
         </div>

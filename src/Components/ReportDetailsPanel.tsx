@@ -79,7 +79,7 @@ export const ReportDetailsPanel = ({reportId, onClose}: ReportDetailsPanelProps)
                             </div>
                             <div className="sp-info-group status">
                                 <span className="sp-label ">Status</span>
-                                <span className={`sp-value status-badge ${details.status === "NOWE" ? 'new' : details.status === 'W TRAKCIE' ? 'in-progress' : details.status === 'ROZWIĄZANE' ? 'resolved' : ''}`}>{details.status}</span>
+                                <span className={`sp-value status-badge ${details.status === "NOWE" ? 'new' : details.status === 'W TRAKCIE' ? 'in-progress' : details.status === 'ROZWIĄZANE' ? 'resolved' : details.status === 'ODRZUCONE' ? 'rejected' : ''}`}>{details.status}</span>
                             </div>
                         </div>
 

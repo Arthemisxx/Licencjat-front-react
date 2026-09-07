@@ -44,6 +44,7 @@
     margin-top: 40px;
     margin-bottom: 15px;
     font-size: 18px;
+    font-family: Poppins, Arial, sans-serif;
     background-color: var(--color-primary-magenta);
     color: var(--color-background-white);
     border: none;
@@ -62,6 +63,7 @@
     margin-top: 20px;
     margin-bottom: 15px;
     font-size: 18px;
+    font-family: Poppins, Arial, sans-serif;
     background-color: var(--color-secondary-blue);
     color: var(--color-background-white);
     border: none;
@@ -76,6 +78,8 @@
     font-weight: bold;
     color: var(--color-secondary-blue);
     padding-left: 5px;
+    font-family: Futura, Poppins, Arial, sans-serif;
+    font-size: 18px;
 
 }
 
@@ -83,6 +87,8 @@
     font-weight: bold;
     color: var(--color-primary-magenta);
     padding-left: 5px;
+    font-family: Futura, Poppins, Arial, sans-serif;
+    font-size: 18px;
 
 }
 
@@ -97,4 +103,8 @@
 .div-center{
     display: flex;
     justify-content: center;
+    align-items: center;
+    font-family: Poppins, sans-serif;
+    font-size: 14px;
+
 }

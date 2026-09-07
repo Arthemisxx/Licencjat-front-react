@@ -14,22 +14,20 @@ import {AuthProvider} from "./Auth/AuthProvider.tsx";
 import {AdminPanelView} from "./Views/AdminPanel/AdminPanelView.tsx";
 
 function App() {
-
     return (
         <>
             <AuthProvider>
-                    <Routes>
-                        <Route path="/" element={<><Header/><HomeView/><Footer/></>}/>
-                        <Route path="/mapa" element={<><Header/><MapView/></>}/>
-                        <Route path="/nowe-zgloszenie" element={<><Header/><AddReportView/></>}/>
-                        <Route path="/uzytkownik" element={<><Header/><UserAccountView/><Footer/></>}/>
-                        <Route path="/panel-administratora" element={<><Header/><AdminPanelView/><Footer/></>}/>
-                        <Route path="*" element={<><Header/><NotFoundView/><Footer/></>}/>
-                        <Route path="/logowanie" element={<Login/>}/>
-                        <Route path="/rejestracja" element={<Register/>}/>
-                    </Routes>
+                <Routes>
+                    <Route path="/" element={<><Header/><HomeView/><Footer/></>}/>
+                    <Route path="/mapa" element={<><Header/><MapView/></>}/>
+                    <Route path="/nowe-zgloszenie" element={<><Header/><AddReportView/></>}/>
+                    <Route path="/uzytkownik" element={<><Header/><UserAccountView/><Footer/></>}/>
+                    <Route path="/panel-administratora" element={<><Header/><AdminPanelView/><Footer/></>}/>
+                    <Route path="*" element={<><Header/><NotFoundView/><Footer/></>}/>
+                    <Route path="/logowanie" element={<Login/>}/>
+                    <Route path="/rejestracja" element={<Register/>}/>
+                </Routes>
             </AuthProvider>
-
         </>
     )
 }

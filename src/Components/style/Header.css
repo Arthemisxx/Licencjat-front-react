@@ -36,6 +36,7 @@
 .header-option{
     color: var(--color-text-main-black);
     align-self: center;
+    font-family: Poppins, sans-serif;
     font-size: 18px;
     font-weight: 600;
     margin-left: 50px;

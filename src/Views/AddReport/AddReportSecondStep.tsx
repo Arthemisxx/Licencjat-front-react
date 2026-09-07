@@ -30,11 +30,11 @@ interface Localization {
 export const AddReportSecondStep = ({onStepBack, onSubmit, initialCategoryId, categories}: SecondStepProps) => {
     const [categoryId, setCategoryId] = useState<number>(initialCategoryId);
     const [description, setDescription] = useState<string>("");
-    const [guestEmail, setGuestEmail] = useState<string | null>(null);
+    const [guestEmail, setGuestEmail] = useState<string>("");
     const [photos, setPhotos] = useState<File[]>([]);
     const [photosPreviewUrls, setPhotosPreviewUrls] = useState<string[]>([]);
-    const [localization, setLocalization] = useState<Localization>(null);
-    const [address, setAddress] = useState<string | null>(null);
+    const [localization, setLocalization] = useState<Localization | null>(null);
+    const [address, setAddress] = useState<string>("");
     const [errors, setErrors] = useState<FormErrors>({});
 
     const {isAuthenticated, user} = useAuth();
@@ -96,6 +96,7 @@ export const AddReportSecondStep = ({onStepBack, onSubmit, initialCategoryId, ca
 
     useEffect(() => {
         if(hasInitialLocalization){
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLocalization({latitude: initialLatitude, longitude:initialLongitude});
         }
     }, []);
@@ -159,13 +160,12 @@ export const AddReportSecondStep = ({onStepBack, onSubmit, initialCategoryId, ca
             return;
         }
 
-
         const newReport: ReportData = {
             authorId: user ? user.id : null,
             categoryId: categoryId,
             description: description,
-            latitude: localization.latitude,
-            longitude: localization.longitude,
+            latitude: localization!.latitude,
+            longitude: localization!.longitude,
             address: address,
             guestEmail: guestEmail,
             photos: photos
@@ -248,7 +248,7 @@ export const AddReportSecondStep = ({onStepBack, onSubmit, initialCategoryId, ca
                                                   maxBounds={lodzBounds}
                                                   minZoom={11}>
                                         {cityBoundaries && (
-                                            <GeoJSON data={cityBoundaries as any}
+                                            <GeoJSON data={cityBoundaries as never}
                                                      style={borderStyle}
                                                      eventHandlers={{
                                                          click: (e) => {
@@ -281,7 +281,7 @@ export const AddReportSecondStep = ({onStepBack, onSubmit, initialCategoryId, ca
                                     <input
                                         type="email"
                                         className={`report-form-input ${errors.guestEmail ? 'input-error' : ''}`}
-                                        placeholder="Aby otrzymać powiadomienie o statusie"
+                                        placeholder="Twój adres email"
                                         name="guestEmail"
                                         value={guestEmail}
                                         onChange={handleEmailChange}

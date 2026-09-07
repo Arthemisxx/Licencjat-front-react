@@ -1,9 +1,9 @@
 import '../Views/style/UserAccountView.css'
 import {useEffect, useState} from "react";
-import type {ReportDetails} from "../types/report.ts";
-import {fetchCurrentUserReports, fetchCurrentUserWatchedReports, toggleWatchReport} from "../Utils/api.ts";
+import type {ReportDetails, UserReportDetailsData} from "../types/report.ts";
+import {fetchCurrentUserReports, fetchCurrentUserWatchedReports, toggleWatchReport, fetchUserReportDetails} from "../Utils/api.ts";
 import {UserReport} from "./UserReport.tsx";
-import { createPortal } from 'react-dom';
+import {ReportDetailsAdmin} from "../Views/AdminPanel/ReportDetailsAdmin.tsx";
 
 interface ReportsListProps{
     type: string;
@@ -13,7 +13,12 @@ export const ReportsList = ({type}: ReportsListProps) => {
     const [userReports, setUserReports] = useState<ReportDetails[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>()
     const [selectedReport, setSelectedReport] = useState<ReportDetails | null>(null)
-
+    const [selectedReportId, setSelectedReportId] = useState<number | null>(null)
+    const [selectedReportDetails, setSelectedReportDetails] = useState<UserReportDetailsData | null>(null)
+    const [isReportLoading, setIsReportLoading] = useState<boolean>(false)
+    const [statusToChange, setStatusToChange] = useState<string | null>(null)
+    const [noteToChange, setNoteToChange] = useState<string | null>(null)
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchReports = async () => {
@@ -38,19 +43,19 @@ export const ReportsList = ({type}: ReportsListProps) => {
     }, [type]);
 
     const handleWatchToggle = async() => {
-        if(!selectedReport) return;
+        if(!selectedReportDetails) return;
 
-        const previousWatchState = selectedReport.isWatched;
+        const previousWatchState = selectedReportDetails.isWatched;
         const newWatchState = !previousWatchState;
 
-        setSelectedReport(prev => prev ? { ...prev, isWatched: !prev.isWatched } : prev);
+        setSelectedReportDetails(prev => prev ? { ...prev, isWatched: !prev.isWatched } : prev);
 
         setUserReports(prevReports => {
             if (type === "watched" && !newWatchState) {
-                return prevReports.filter(report => report.id !== selectedReport.id);
+                return prevReports.filter(report => report.id !== selectedReportDetails.id);
             } else {
                 return prevReports.map(report =>
-                    report.id === selectedReport.id
+                    report.id === selectedReportDetails.id
                         ? { ...report, isWatched: newWatchState }
                         : report
                 );
@@ -58,29 +63,60 @@ export const ReportsList = ({type}: ReportsListProps) => {
         });
 
         try{
-            await toggleWatchReport(selectedReport.id);
+            await toggleWatchReport(selectedReportDetails.id);
 
         }catch(error){
-            setSelectedReport(prev => prev ? { ...prev, isWatched: previousWatchState } : prev);
+            setSelectedReportDetails(prev => prev ? { ...prev, isWatched: previousWatchState } : prev);
 
             setUserReports(prevReports => {
                 if (type === "watched" && !newWatchState) {
-                    return [...prevReports, { ...selectedReport, isWatched: previousWatchState }];
+                    return [...prevReports, { ...selectedReportDetails, isWatched: previousWatchState }];
                 } else {
                     return prevReports.map(report =>
-                        report.id === selectedReport.id
+                        report.id === selectedReportDetails.id
                             ? { ...report, isWatched: previousWatchState }
                             : report
                     );
                 }
             });
         }
-
-
-
     }
 
+    const loadReportDetails = async () => {
+        setIsReportLoading(true);
+        if (selectedReportId === null) return null;
 
+        try {
+            const data = await fetchUserReportDetails(selectedReportId);
+            setSelectedReportDetails(data);
+        } catch (error) {
+            console.error("Błąd pobierania raportu:", error);
+        } finally {
+            setIsReportLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (selectedReportId !== null) {
+            loadReportDetails();
+        }
+    }, [selectedReportId]);
+
+    const handleModalClose = () => {
+        setNoteToChange(null);
+        setStatusToChange(null);
+        setSelectedReportId(null);
+        setSelectedReportDetails(null);
+        setSelectedReport(null);
+    };
+
+    const handleDeleteClick = () => {
+        setShowDeleteConfirm(true);
+    };
+
+    const handleDeleteCancel = () => {
+        setShowDeleteConfirm(false);
+    };
 
     return (
         <><div className="reports-list">
@@ -91,75 +127,37 @@ export const ReportsList = ({type}: ReportsListProps) => {
                     <div className="sp-loading">Brak zgłoszeń</div>
                     ):(
                     userReports.map(report => (
-                        <UserReport key={report.id} report={report} onClick={() => setSelectedReport(report)}/>
+                        <UserReport key={report.id} report={report} onClick={() => {
+                            setSelectedReport(report);
+                            setSelectedReportId(report.id);
+                        }}/>
                     ))
                 )
 
             )}
         </div>
 
-            {selectedReport && createPortal(
-                <div className="report-modal-overlay" onClick={() => setSelectedReport(null)}>
-                    <span className="report-modal-close" onClick={() => setSelectedReport(null)}>&times;</span>
+            <ReportDetailsAdmin
+                view={"USER"}
+                selectedReportId={selectedReportId}
+                selectedReport={selectedReportDetails as any}
+                isReportLoading={isReportLoading}
+                statusToChange={statusToChange}
+                noteToChange={noteToChange}
+                showDeleteConfirm={showDeleteConfirm}
+                onClose={handleModalClose}
+                onStatusChange={(value) => setStatusToChange(value)}
+                onNoteChange={(value) => setNoteToChange(value)}
+                onSaveChanges={() => {}}
+                onDeleteClick={handleDeleteClick}
+                onDeleteConfirm={() => {
+                    setShowDeleteConfirm(false);
+                    handleModalClose();
+                }}
+                onDeleteCancel={handleDeleteCancel}
+                onWatchToggle={handleWatchToggle}
+            />
 
-                    <div
-                        className="report-modal-content"
-                        onClick={(e) => e.stopPropagation()}
-                        style={{ borderTopColor: selectedReport.categoryColorHex || 'var(--color-secondary-yellow)' }}
-                    >
-                        <div className="report-modal-header">
-                            <div className="report-modal-title">
-
-                                <h2>{selectedReport.categoryName} </h2>
-                            </div>
-                            <div className={`report-status-badge ${selectedReport.status === "NOWE" ? 'new' : selectedReport.status === 'W TRAKCIE' ? 'in-progress' : selectedReport.status === 'ROZWIĄZANE' ? 'resolved' : ''}`}>
-                                {selectedReport.status}
-                            </div>
-                        </div>
-
-                        <div className="report-modal-body">
-                            <p className="report-description">{selectedReport.description}</p>
-
-                            {selectedReport.imageUrls && selectedReport.imageUrls.length > 0 && (
-                                <div className="report-images-section">
-                                    <h3>Załączone zdjęcia</h3>
-                                    <div className="report-images-grid">
-                                        {selectedReport.imageUrls.map((url, index) => (
-                                            <img key={index} src={url} alt={`Zgłoszenie ${selectedReport.id} - zdjęcie ${index + 1}`} />
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="report-details-grid">
-                                <div className="detail-item">
-                                    <span className="detail-label">Lokalizacja:</span>
-                                    <span className="detail-value">
-                            {selectedReport.address ? selectedReport.address : `${selectedReport.latitude}, ${selectedReport.longitude}`}
-                        </span>
-                                </div>
-                                <div className="detail-item">
-                                    <span className="detail-label">Data zgłoszenia:</span>
-                                    <span className="detail-value">{new Date(selectedReport.createdAt).toLocaleDateString('pl-PL')}</span>
-                                </div>
-                                <div className="detail-item">
-                                    <span className="detail-label">Ostatnia zmiana:</span>
-                                    <span className="detail-value">{new Date(selectedReport.updatedAt).toLocaleDateString('pl-PL')}</span>
-                                </div>
-                            </div>
-
-
-                        </div>
-
-                        <div className="report-modal-actions">
-                            <button className={`btn-watch ${selectedReport.isWatched ? 'watched' : ''}`}  onClick={handleWatchToggle}>
-                                {selectedReport.isWatched ? 'Obserwujesz' : 'Obserwuj'}
-                            </button>
-                        </div>
-                    </div>
-                </div>,
-                document.body
-            )}
         </>
 
 

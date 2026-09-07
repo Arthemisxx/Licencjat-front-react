@@ -24,17 +24,14 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
         localStorage.setItem("token", newToken);
         setToken(newToken);
     };
-
     const logout = () => {
         localStorage.removeItem("token");
         setToken(null);
         navigate("/");
     };
-
     const updateCurrentUser = () => {
         fetchUserDetails().then(data => setUser(data));
     };
-
     useEffect(() => {
         if (token) {
             try {
@@ -43,6 +40,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
                 const currentTime = Date.now();
 
                 if (expirationTime < currentTime) {
+                    // eslint-disable-next-line react-hooks/set-state-in-effect
                     logout();
                 } else {
                     fetchUserDetails().then(data => setUser(data));
@@ -58,11 +56,11 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
             }
         }
     }, [token]);
-
     const isAuthenticated = !!token;
 
     return (
-        <AuthContext.Provider value={{token, login, logout, isAuthenticated, user, updateCurrentUser}}>
+        <AuthContext.Provider value={{token, login, logout, isAuthenticated, user,
+            updateCurrentUser}}>
             {children}
         </AuthContext.Provider>
     );

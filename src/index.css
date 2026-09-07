@@ -5,7 +5,7 @@
 }
 
 :root {
-  font-family: Futura, Helvetica, Arial, sans-serif;
+  font-family: Futura, Poppins, Arial, sans-serif;
   font-weight: 400;
 
   color-scheme: light dark;
@@ -32,6 +32,21 @@ body {
   min-width: 320px;
   min-height: 100vh;
 
+}
+
+.custom-toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--color-secondary-blue);
+  color: var(--color-text-main-black);
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 999999;
+  animation: slideInToast 0.3s ease-out forwards, fadeOutToast 0.3s ease-in 2.7s forwards;
 }
 
 

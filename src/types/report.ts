@@ -43,21 +43,61 @@ export interface ReportDetails{
     isWatched?: boolean;
 }
 
-//todo: poprawić - dodać pola
-export interface ReportAdminDetails{
+
+
+export interface AdminReportDetailsData {
+    adminNote?: string;
     id: number;
     description: string;
     latitude: number;
     longitude: number;
     address?: string;
-    status: string;
-    createdAt: Date;
-    updatedAt: Date;
     categoryId: number;
     categoryName: string;
-    categoryIconKey?: string;
-    categoryColorHex?: string;
+    createdAt: string;
+    updatedAt: string;
+    status: string;
+    authorId: number | null;
+    authorName: string;
+    authorEmail?: string;
+    imageUrls?: string[];
+    watchedBy: number;
+    isWatched?: boolean;
+}
+
+export interface UserReportDetailsData {
+    id: number;
+    description: string;
+    latitude: number;
+    longitude: number;
+    address?: string;
+    categoryId: number;
+    categoryName: string;
+    createdAt: string;
+    updatedAt: string;
+    status: string;
     imageUrls?: string[];
     isWatched?: boolean;
-    author: string;
+}
+
+export interface AdminReport {
+    id: number;
+    description: string;
+    categoryId: number;
+    categoryName: string;
+    createdAt: Date;
+    updatedAt: Date;
+    status: string;
+    authorId: number | null;
+    authorName: string;
+}
+
+export interface Page<T> {
+    content: T[];
+    totalPages: number;
+    totalElements: number;
+    size: number;
+    number: number;
+    last: boolean;
+    empty: boolean;
 }

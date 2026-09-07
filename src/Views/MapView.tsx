@@ -4,12 +4,41 @@ import "./style/views.css"
 import 'leaflet/dist/leaflet.css';
 import {Button} from "../Components/Button.tsx";
 import {useEffect, useRef, useState} from "react";
-import {type LatLngBoundsExpression} from "leaflet";
+import L, {type LatLngBoundsExpression} from "leaflet";
 import cityBoundaries from "../Utils/lodz-borders.json"
 import type {Category, ReportMapData} from "../types/report.ts";
 import {fetchCategories, fetchFilteredReports} from "../Utils/api.ts";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {ReportDetailsPanel} from "../Components/ReportDetailsPanel.tsx";
+
+// const defaultIcon = new L.Icon({
+//     iconUrl: 'public/marker.svg',
+//     shadowUrl: 'public/shadow.png',
+//     iconSize: [25, 41],
+//     iconAnchor: [12, 41],
+//     popupAnchor: [1, -34],
+//     shadowSize: [41, 41]
+// });
+
+const defaultIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
+
+const selectedIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+});
+
 
 export const MapView = () => {
     const lodzBounds: LatLngBoundsExpression = [[51.6500, 19.2500], [51.9000, 19.7000]];
@@ -17,7 +46,7 @@ export const MapView = () => {
     const [filteredReports, setFilteredReports] = useState<ReportMapData[]>([]);
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedReportId, setSelectedReportId] = useState<number | null>(null);
-    const [potentialReport, setPotentialReport] = useState<{lat: number, lng: number} | null>(null)
+    const [potentialReport, setPotentialReport] = useState<{ lat: number, lng: number } | null>(null)
     const navigate = useNavigate();
     const tempMarkerRef = useRef<any>(null);
 
@@ -27,7 +56,7 @@ export const MapView = () => {
     let filteredCategoryIds: number[];
 
     if (!hasCategoriesParam) {
-        filteredCategoryIds = [1, 2, 3, 4, 5];
+        filteredCategoryIds = [1, 2, 3, 4, 5, 6];
     } else if (categoriesParam === "") {
         filteredCategoryIds = [];
     } else {
@@ -65,7 +94,7 @@ export const MapView = () => {
     }, [searchParams]);
 
     useEffect(() => {
-        if(potentialReport && tempMarkerRef.current){
+        if (potentialReport && tempMarkerRef.current) {
             setTimeout(() => {
                 tempMarkerRef.current?.openPopup()
             }, 10);
@@ -108,18 +137,22 @@ export const MapView = () => {
                 <Button buttonType="add-report" content={"Dodaj zgłoszenie"} route="/nowe-zgloszenie"></Button>
 
             </div>
-            <MapContainer center={[51.77307, 19.48040]}
-                          zoom={11}
-                          scrollWheelZoom={true}
-                          style={{height: '100%', width: '100%'}}
-                          maxBounds={lodzBounds}
-                          minZoom={11}
-            >
+
+            <MapContainer
+                center={[51.77307, 19.48040]}
+                zoom={11}
+                scrollWheelZoom={true}
+                style={{height: '100%', width: '100%'}}
+                maxBounds={lodzBounds}
+                minZoom={11}>
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">
+                    OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+
                 {cityBoundaries && (
+
                     <GeoJSON
                         data={cityBoundaries as any}
                         style={borderStyle}
@@ -130,10 +163,13 @@ export const MapView = () => {
                             }
                         }}
                     />
+
                 )}
+
                 {filteredReports.map(report => (
                     <Marker
                         key={report.id}
+                        icon={selectedReportId === report.id ? selectedIcon : defaultIcon}
                         position={[report.latitude, report.longitude]}
                         eventHandlers={{
                             click: () => {
@@ -144,6 +180,7 @@ export const MapView = () => {
                     >
                     </Marker>
                 ))}
+
                 {potentialReport && (
                     <Marker position={potentialReport}
                             ref={tempMarkerRef}>
@@ -155,7 +192,8 @@ export const MapView = () => {
                         }}>
                             <div className="popup-add-report">
                                 <p>Chcesz dodać zgłoszenie w tym miejscu?</p>
-                                <button className="popup-report-btn" onClick={() => navigate(`/nowe-zgloszenie?lat=${potentialReport?.lat}&lng=${potentialReport.lng}`)}>
+                                <button className="popup-report-btn"
+                                        onClick={() => navigate(`/nowe-zgloszenie?lat=${potentialReport?.lat}&lng=${potentialReport.lng}`)}>
                                     DODAJ
                                 </button>
                             </div>

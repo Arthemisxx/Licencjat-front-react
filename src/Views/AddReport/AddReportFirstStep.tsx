@@ -32,7 +32,7 @@ export const AddReportFirstStep = ({onCategorySelect, categories}: FirstStepProp
                 {categories.map((category) => (
                     <CategoryButton
                         key={category.id}
-                        imagePath={category.iconKey}
+                        imagePath={category.iconKey || "other.svg"}
                         name={category.name}
                         onClick={() => onCategorySelect(category.id)}
                     />
